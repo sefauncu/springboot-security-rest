@@ -16,21 +16,43 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.model.Customer;
 import com.example.service.CustomerService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
+import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
+
 @RestController
 @RequestMapping("/api")
+@Api(value = "CustomersControllerAPI", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CustomerRestController {
 
 	@Autowired
 	private CustomerService customerService;
 
-	@GetMapping("/customers")
+	
+
+	@ApiOperation(value ="all customers")
+	@ApiResponses(value= {
+			@ApiResponse(code=200,message="Successful")
+	})
+	@GetMapping("/customerAll")
 	public List<Customer> getCustomers() {
 
 		return customerService.getCustomers();
 
 	}	
-
-	@GetMapping("/customer/{customerId}")
+	
+	
+	
+	@ApiOperation(value ="gets the customer with specific ID")
+	@ApiResponses(value= {
+			@ApiResponse(code=200,message="Successful"),
+			@ApiResponse(code=400,message="ID not found")	
+	})
+	@GetMapping("/customerGet/{customerId}")
 	public Customer getCustomer(@PathVariable int customerId) {
 
 		Customer theCustomer = customerService.getCustomer(customerId);
@@ -42,13 +64,30 @@ public class CustomerRestController {
 		return theCustomer;
 	}
 
-	@DeleteMapping("/customers/{customerId}")
+
+	
+	@ApiOperation(value ="delete the customer with specific ID")
+	@DeleteMapping("/customerDelete/{customerId}")
+	@Secured({ "ROLE_ADMIN" })
+	@ApiResponses(value= {
+			@ApiResponse(code=200,message="Successful"),
+			@ApiResponse(code=400,message="ID not found"),
+			@ApiResponse(code=404,message="user has no authority")
+	})
 	public void deleteCustomer(@PathVariable int customerId) {
 		
 		customerService.deleteCustomer(customerId);
 	}
 
-	@PostMapping("/customers/")
+
+	@ApiOperation(value ="new customer registration")
+	@PostMapping("/customerPost")
+	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
+	@ApiResponses(value= {
+			@ApiResponse(code=200,message="Successful"),
+			//@ApiResponse(code=400,message="ID not found"),
+			@ApiResponse(code=404,message="user has no authority")
+	})
 	public Customer addCustomer(@RequestBody Customer theCustomer) {
 
 		// aynı zamanda JSON'da bir kimliği geçmesi durumunda ... kimliği 0
@@ -61,8 +100,16 @@ public class CustomerRestController {
 
 		return theCustomer;
 	}
-
-	@PutMapping("/customers/")
+	
+	
+	@ApiOperation(value ="update customer")
+	@PutMapping("/customerPut")
+	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
+	@ApiResponses(value= {
+			@ApiResponse(code=200,message="Successful"),
+			//@ApiResponse(code=400,message="ID not found"),
+			@ApiResponse(code=404,message="user has no authority")
+	})
 	public Customer updateCustomer(@RequestBody Customer theCustomer) {
 
 		customerService.saveCustomer(theCustomer);

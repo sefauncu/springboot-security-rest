@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -92,15 +93,27 @@ public class LoginController {
 		return modelAndView;
 	}
 	
-	
+	/*
 	@RequestMapping(value="/admin/home", method = RequestMethod.GET)
-	public ModelAndView home(){
+	public ModelAndView homeAdmin(){
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userService.findUserByEmail(auth.getName());
 		modelAndView.addObject("userName", "Welcome " + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
 		modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
 		modelAndView.setViewName("admin/home");
+		return modelAndView;
+	}*/
+	
+	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
+	@RequestMapping(value="/user/home", method = RequestMethod.GET)
+	public ModelAndView homeUser(){
+		ModelAndView modelAndView = new ModelAndView();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userService.findUserByEmail(auth.getName());
+		modelAndView.addObject("userName", "Welcome " + user.getName() + " " + user.getLastName() + "(" + user.getEmail() + ")");
+		modelAndView.addObject("role", ""+ user.getRoles().toString());
+		modelAndView.setViewName("user/home");
 		return modelAndView;
 	}
 	
