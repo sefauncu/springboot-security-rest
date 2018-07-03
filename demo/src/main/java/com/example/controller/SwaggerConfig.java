@@ -35,7 +35,7 @@ public class SwaggerConfig {
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
         		.apiInfo(apiInfo())
-        		.pathMapping("/")
+        		.pathMapping("/root-path")
                 .select()                 
                 .apis(RequestHandlerSelectors.basePackage("com.example.controller"))
                 .paths(PathSelectors.regex("/api.*"))
