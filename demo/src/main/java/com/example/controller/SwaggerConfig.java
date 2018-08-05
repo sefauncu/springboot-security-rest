@@ -20,8 +20,7 @@ public class SwaggerConfig {
 	private static final String title = "Customer REST API";
 	private static final String description = "RESTful API for Customers";
 	
-	
-	private ApiInfo apiInfo() {
+	private ApiInfo apiInfo() {		
 		
 		return new ApiInfoBuilder()
 				.title(title)
@@ -29,13 +28,11 @@ public class SwaggerConfig {
 				.license(LICENCE_TEXT)
 				.version(SWAGGER_API_VERSION)
 				.build();
-	}
-	
+	}	
     @Bean
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
         		.apiInfo(apiInfo())
-        		.pathMapping("/root-path")
                 .select()                 
                 .apis(RequestHandlerSelectors.basePackage("com.example.controller"))
                 .paths(PathSelectors.regex("/api.*"))

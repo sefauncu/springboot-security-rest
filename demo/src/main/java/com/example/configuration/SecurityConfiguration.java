@@ -40,7 +40,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		http.authorizeRequests().antMatchers("/", "/login", "/registration", "/registrationRole").permitAll()
 				.antMatchers("/api/customerAll", "/api/customerGet/**").permitAll()
-				.antMatchers("/swagger-ui.html", "/swagger-ui.html/**").permitAll()
 				.antMatchers()
 				.hasAuthority("ADMIN")
 				.antMatchers()
